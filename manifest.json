@@ -1,13 +1,45 @@
 {
-    "name": "আমার বই",
-    "short_name": "আমার বই",
-    "start_url": "/index.html",
-    "display": "standalone",
-    "background_color": "#f4f7f6",
-    "theme_color": "#007bff",
-    "orientation": "portrait-primary",
-    "icons": [
-        { "src": "icon-192x192.png", "type": "image/png", "sizes": "192x192" },
-        { "src": "icon-512x512.png", "type": "image/png", "sizes": "512x512" }
-    ]
+  "name": "আমার বই - অডিওবুক প্লেয়ার",
+  "short_name": "আমার বই",
+  "description": "স্কুলের বাংলা ও ইংরেজি বইয়ের অডিও শুনুন। অফলাইনে ব্যবহারের সুবিধা।",
+  "lang": "bn-BD",
+  "dir": "ltr",
+  "start_url": "/",
+  "id": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7f6",
+  "theme_color": "#007bff",
+  "orientation": "portrait-primary",
+  "categories": ["education", "books", "kids"],
+  "icons": [
+    {
+      "src": "images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/screenshot-1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "বিষয় তালিকা"
+    },
+    {
+      "src": "images/screenshot-2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "অডিও প্লেয়ার"
+    }
+  ]
 }
