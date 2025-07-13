@@ -6,8 +6,8 @@
     "chapters": [
         {
             "id": "ch1_bangla", "subject_id": "bangla", "name": "অধ্যায় ১: প্রত্যুপকার",
-            "sadhu_audio_url": "https://esakash12.github.io/Amar-Boi-App/audios/download.mp3",
-            "cholito_audio_url": "https://esakash12.github.io/Amar-Boi-App/audios/download.mp3"
+            "sadhu_audio_url": "https://github.com/esakash12/Amader-Boi/blob/main/Audios/download.mp3",
+            "cholito_audio_url": "https://github.com/esakash12/Amader-Boi/blob/main/Audios/download.mp3"
         },
         {
             "id": "ch2_bangla", "subject_id": "bangla", "name": "অধ্যায় ২: একুশের গান",
