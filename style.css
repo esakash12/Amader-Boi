@@ -55,11 +55,12 @@ button:hover:not(:disabled) { background-color: #0056b3; }
     margin: 1rem auto;
     width: 150px;
     height: 150px;
-    background-color: #eee; /* একটি প্লেস হোল্ডার রঙ */
+    background-color: #eee;
     border-radius: 8px;
+    overflow: hidden;
 }
-#album-art { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; color: transparent; /* ভাঙা ছবির আইকন লুকাতে */ }
-#audio-player { width: 100%; margin: 1.5rem 0; }
+#album-art { width: 100%; height: 100%; object-fit: cover; color: transparent; }
+#audio-player { width: 100%; max-width: 500px; margin: 1.5rem 0; }
 .player-controls { margin-bottom: 1rem; }
 .player-controls p { margin: 0 0 0.5rem 0; font-weight: bold; }
 .audio-version-btn { background-color: var(--secondary-color); }
