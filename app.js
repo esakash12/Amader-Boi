@@ -15,6 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentChapter = null;
     let allData = null;
+    const CACHE_NAME = 'audio-cache-v1';
+
+    // --- Helper Functions ---
+    function createCard(text, onClickHandler) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.textContent = text;
+        card.onclick = onClickHandler;
+        return card;
+    }
 
     // --- Navigation ---
     function showSubjects() {
@@ -28,13 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('subject-title-chapters').textContent = subject.name;
         chaptersList.innerHTML = '';
         const filteredChapters = allData.chapters.filter(c => c.subject_id === subjectId);
+        
         filteredChapters.forEach(chapter => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.textContent = chapter.name;
-            card.onclick = () => showPlayer(chapter.id);
+            const card = createCard(chapter.name, () => showPlayer(chapter.id));
             chaptersList.appendChild(card);
         });
+
         subjectsContainer.classList.add('hidden');
         chaptersContainer.classList.remove('hidden');
         playerContainer.classList.add('hidden');
@@ -47,14 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
         sadhuBtn.disabled = !currentChapter.sadhu_audio_url;
         cholitoBtn.disabled = !currentChapter.cholito_audio_url;
 
-        if (currentChapter.sadhu_audio_url) {
-            await setAudioSource('sadhu');
-        } else if (currentChapter.cholito_audio_url) {
-            await setAudioSource('cholito');
-        } else {
-            audioPlayer.src = '';
-            alert('এই অধ্যায়ের জন্য কোনো অডিও ফাইল পাওয়া যায়নি।');
+        let initialVersion = 'sadhu';
+        if (!currentChapter.sadhu_audio_url && currentChapter.cholito_audio_url) {
+            initialVersion = 'cholito';
         }
+        
+        await setAudioSource(initialVersion, true); // true = প্রথমবার লোড হচ্ছে
         
         checkDownloadStatus();
         subjectsContainer.classList.add('hidden');
@@ -62,51 +69,71 @@ document.addEventListener('DOMContentLoaded', () => {
         playerContainer.classList.remove('hidden');
     }
     
-    async function setAudioSource(version) {
+    // উন্নতি: অডিওর প্লেব্যাকের অবস্থান ধরে রাখে
+    async function setAudioSource(version, isFirstLoad = false) {
         const url = version === 'sadhu' ? currentChapter.sadhu_audio_url : currentChapter.cholito_audio_url;
+        if (!url) {
+            if (isFirstLoad) alert('এই অধ্যায়ের জন্য কোনো অডিও ফাইল পাওয়া যায়নি।');
+            return;
+        }
+
+        const currentTime = isFirstLoad ? 0 : audioPlayer.currentTime;
+        const isPaused = audioPlayer.paused;
         
         sadhuBtn.classList.toggle('active', version === 'sadhu');
         cholitoBtn.classList.toggle('active', version === 'cholito');
 
         const offlineUrl = await getOfflineUrl(url);
         audioPlayer.src = offlineUrl || url;
+
+        audioPlayer.onloadedmetadata = () => {
+            audioPlayer.currentTime = currentTime;
+            if (!isPaused) {
+                audioPlayer.play().catch(e => console.error("Autoplay was prevented:", e));
+            }
+        };
     }
     
     // --- Data Loading ---
     async function loadData() {
         try {
-            const response = await fetch(`database.json?v=${new Date().getTime()}`);
-            if (!response.ok) throw new Error('Network response was not ok');
+            // গুরুতর সংশোধন: ক্যাশ-বাস্টিং প্যারামিটার সরানো হয়েছে
+            const response = await fetch('database.json');
+            if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
             allData = await response.json();
             
             subjectsList.innerHTML = '';
-            allData.subjects.forEach(subject => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.textContent = subject.name;
-                card.onclick = () => showChapters(subject.id);
-                subjectsList.appendChild(card);
-            });
+            // উন্নতি: খালি ডেটার জন্য ব্যবস্থা
+            if (allData.subjects && allData.subjects.length > 0) {
+                allData.subjects.forEach(subject => {
+                    const card = createCard(subject.name, () => showChapters(subject.id));
+                    subjectsList.appendChild(card);
+                });
+            } else {
+                subjectsList.innerHTML = '<div class="card placeholder">কোনো বিষয় পাওয়া যায়নি।</div>';
+            }
         } catch (error) {
-            subjectsList.innerHTML = '<div class="card placeholder">ডেটা লোড করা যায়নি। ইন্টারনেট সংযোগ চেক করুন।</div>';
+            subjectsList.innerHTML = '<div class="card placeholder">ডেটা লোড করা যায়নি। অফলাইনে থাকলে অ্যাপটি পুনরায় চালু করুন।</div>';
             console.error('Failed to load data:', error);
         }
     }
 
     // --- Offline Functionality ---
-    const CACHE_NAME = 'audio-cache-v1';
-
     async function downloadAudio() {
         if (!currentChapter) return;
+        downloadBtn.disabled = true;
         downloadStatus.textContent = 'ডাউনলোড শুরু হচ্ছে...';
+        
         try {
             const cache = await caches.open(CACHE_NAME);
-            if (currentChapter.sadhu_audio_url) await cache.add(currentChapter.sadhu_audio_url);
-            if (currentChapter.cholito_audio_url) await cache.add(currentChapter.cholito_audio_url);
+            const urlsToCache = [currentChapter.sadhu_audio_url, currentChapter.cholito_audio_url].filter(Boolean);
+            
+            await cache.addAll(urlsToCache);
+            
             downloadStatus.textContent = 'সফলভাবে অফলাইনে সেভ হয়েছে!';
-            downloadBtn.disabled = true;
         } catch (error) {
             downloadStatus.textContent = 'ডাউনলোড ব্যর্থ হয়েছে।';
+            downloadBtn.disabled = false;
             console.error('Download failed:', error);
         }
     }
@@ -117,7 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const cache = await caches.open(CACHE_NAME);
             const response = await cache.match(url);
             return response ? response.url : null;
-        } catch (error) { return null; }
+        } catch (error) { 
+            console.error("Cache access error:", error);
+            return null;
+        }
     }
 
     async function checkDownloadStatus() {
@@ -125,10 +155,24 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadBtn.disabled = false;
         
         if (!currentChapter) return;
-        const sadhuOffline = await getOfflineUrl(currentChapter.sadhu_audio_url);
-        const cholitoOffline = await getOfflineUrl(currentChapter.cholito_audio_url);
 
-        if (sadhuOffline || cholitoOffline) {
+        const urlsToCheck = [currentChapter.sadhu_audio_url, currentChapter.cholito_audio_url].filter(Boolean);
+        if (urlsToCheck.length === 0) {
+            downloadBtn.disabled = true;
+            downloadStatus.textContent = 'ডাউনলোডের জন্য কোনো ফাইল নেই।';
+            return;
+        }
+
+        let allCached = true;
+        for (const url of urlsToCheck) {
+            const offlineUrl = await getOfflineUrl(url);
+            if (!offlineUrl) {
+                allCached = false;
+                break;
+            }
+        }
+
+        if (allCached) {
             downloadStatus.textContent = 'এই অধ্যায়টি অফলাইনে সেভ করা আছে।';
             downloadBtn.disabled = true;
         }
@@ -143,7 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.error('SW registration failed: ', err));
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registration successful:', reg))
+                .catch(err => console.error('SW registration failed: ', err));
         });
     }
 
