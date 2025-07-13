@@ -1,0 +1,69 @@
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #f4f7f6;
+    --font-color: #333;
+    --card-bg: white;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+header {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+main { padding: 1rem; }
+.list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+.card {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.2rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.placeholder { cursor: default; color: #888; }
+.back-btn {
+    background: none;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+button {
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+button:disabled { background-color: #ccc; cursor: not-allowed; }
+button:hover:not(:disabled) { background-color: #0056b3; }
+#player-container { text-align: center; }
+.album-art-container {
+    margin: 1rem auto;
+    width: 150px;
+    height: 150px;
+    background-color: #eee; /* একটি প্লেস হোল্ডার রঙ */
+    border-radius: 8px;
+}
+#album-art { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; color: transparent; /* ভাঙা ছবির আইকন লুকাতে */ }
+#audio-player { width: 100%; margin: 1.5rem 0; }
+.player-controls { margin-bottom: 1rem; }
+.player-controls p { margin: 0 0 0.5rem 0; font-weight: bold; }
+.audio-version-btn { background-color: var(--secondary-color); }
+.audio-version-btn.active { background-color: #28a745; }
+.action-btn { background-color: #17a2b8; }
+#download-status { margin-top: 1rem; color: #28a745; font-weight: bold; }
+.hidden { display: none; }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার বই</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007bff">
+</head>
+<body>
+    <header>
+        <h1>আমার বই</h1>
+    </header>
+
+    <main>
+        <section id="subjects-container">
+            <h2>বিষয়সমূহ</h2>
+            <div id="subjects-list" class="list-container">
+                <div class="card placeholder">লোড হচ্ছে...</div>
+            </div>
+        </section>
+
+        <section id="chapters-container" class="hidden">
+            <button id="back-to-subjects-btn" class="back-btn">← সকল বিষয়</button>
+            <h2 id="subject-title-chapters"></h2>
+            <div id="chapters-list" class="list-container"></div>
+        </section>
+
+        <section id="player-container" class="hidden">
+            <button id="back-to-chapters-btn" class="back-btn">← সকল অধ্যায়</button>
+            <h2 id="chapter-title-player"></h2>
+            <div class="album-art-container">
+                <!-- আইকন ফাইল না থাকলেও সমস্যা নেই, এখানে একটি খালি জায়গা দেখাবে -->
+                <img src="icon-512x512.png" alt="Album Art" id="album-art">
+            </div>
+            
+            <audio id="audio-player" controls></audio>
+            
+            <div class="player-controls">
+                <p>অডিও সংস্করণ</p>
+                <button id="sadhu-btn" class="audio-version-btn" disabled>সাধু</button>
+                <button id="cholito-btn" class="audio-version-btn" disabled>চলিত</button>
+            </div>
+            
+            <button id="download-btn" class="action-btn">অফলাইনে সেভ করুন</button>
+            <p id="download-status"></p>
+        </section>
+    </main>
+    
+    <script src="app.js"></script>
+</body>
+</html>
