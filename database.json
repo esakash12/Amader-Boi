@@ -1,23 +1,13 @@
 {
-    "subjects": [
-        { "id": "bangla", "name": "বাংলা" },
-        { "id": "english", "name": "ইংরেজি" }
-    ],
+    "subjects": [ ... ],
     "chapters": [
         {
-            "id": "ch1_bangla", "subject_id": "bangla", "name": "অধ্যায় ১: প্রত্যুপকার",
-            "sadhu_audio_url": "https://files.catbox.moe/y8j4m1.wav",
-            "cholito_audio_url": "https://files.catbox.moe/y8j4m1.wav"
+            "id": "ch1_bangla",
+            "subject_id": "bangla",
+            "name": "অধ্যায় ১: প্রত্যুপকার",
+            "sadhu_audio_url": "https://esakash12.github.io/Amar-Boi-App/audios/y8j4m1.wav",
+            "cholito_audio_url": "https://esakash12.github.io/Amar-Boi-App/audios/y8j4m1.wav"
         },
-        {
-            "id": "ch2_bangla", "subject_id": "bangla", "name": "অধ্যায় ২: একুশের গান",
-            "sadhu_audio_url": "YOUR_SADHU_AUDIO_LINK_HERE_2.mp3",
-            "cholito_audio_url": "YOUR_CHOLITO_AUDIO_LINK_HERE_2.mp3"
-        },
-        {
-            "id": "ch1_english", "subject_id": "english", "name": "Chapter 1: Greetings",
-            "sadhu_audio_url": null,
-            "cholito_audio_url": "YOUR_ENGLISH_AUDIO_LINK_HERE_3.mp3"
-        }
+        ...
     ]
 }
